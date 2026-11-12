@@ -17,6 +17,6 @@ Install dependencies with `npm install`, then run `npm run dev`. Run `npm run ty
 
 ## Content and integration
 
-The trial form is a browser-only demonstration. No bookings or personal information are transmitted or stored on a server. A backend or CRM connection is needed for live enquiries. Sample pricing, profiles, member stories, statistics, and contact details follow the design reference and must be verified before business launch. Social links currently open their platforms and the map opens Gulberg III, Lahore.
+The trial form is a browser-only demonstration. No bookings or personal information are transmitted or stored on a server. A backend or CRM connection is needed for live enquiries. Sample pricing, profiles, member stories, statistics, and contact details follow the design reference and must be verified before business launch. Social links currently open their platforms and the embedded Google Map shows DHA Phase 4, Karachi. WhatsApp links use the displayed preview number +92 300 1234567.
 
 All 13 generated photographs are optimized and included in `public/images/`. See `ASSETS.md` for their prompts. Core content is in `app/page.tsx`; the responsive design is in `app/globals.css`.
