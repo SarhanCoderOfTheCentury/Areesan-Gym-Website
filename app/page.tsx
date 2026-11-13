@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import {
   ArrowUpRight,
@@ -36,11 +37,24 @@ import RecommendationSection from "@/components/sections/RecommendationSection";
 import Modal from "@/components/ui/Modal";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import MobileBookingBar from "@/components/ui/MobileBookingBar";
+import {
+  ExperiencePanorama,
+  TrainersSection,
+  TransformationSection,
+  FacilitiesSection,
+} from "@/components/sections/PhotographySections";
+import {
+  photographs,
+  programPhotoIds,
+  photoSource,
+  getPhotograph,
+} from "@/lib/photography";
 const MotionPlayer = dynamic(
   () => import("@/components/remotion/MotionPlayer"),
   { ssr: false },
 );
 const BookingFlow = dynamic(() => import("@/components/BookingFlow"));
+const PhotoLightbox = dynamic(() => import("@/components/PhotoLightbox"));
 const links = [
   ["goals", "Your goal"],
   ["programs", "Programs"],
@@ -48,7 +62,13 @@ const links = [
   ["first-visit", "First visit"],
   ["contact", "Find us"],
 ];
-type Dialog = "booking" | "experience" | "chat" | { program: Program } | null;
+type Dialog =
+  | "booking"
+  | "experience"
+  | "chat"
+  | { program: Program }
+  | { photo: number }
+  | null;
 function Header({ onBook }: { onBook: () => void }) {
   const [menu, setMenu] = useState(false),
     [solid, setSolid] = useState(false),
@@ -200,6 +220,13 @@ export default function Home() {
     setDialog("chat");
     track("whatsapp_cta_clicked", { goal: goalId, plan: planId });
   }
+  function openPhoto(id: string) {
+    const index = photographs.findIndex((p) => p.id === id);
+    if (index >= 0) {
+      setDialog({ photo: index });
+      track("photograph_opened", { photo: id });
+    }
+  }
   const message = `Hi Areesan! I’d like to learn more about ${program.name} and arrange a free trial at ${contact.location}.\n\nMy goal: ${goal.title}\nMembership interest: ${plan.name}\nExperience: ${preferences.level}\nTraining rhythm: ${preferences.days} per week\n\nPlease share availability and current pricing.`;
   return (
     <MotionConfig reducedMotion="user">
@@ -216,6 +243,7 @@ export default function Home() {
               track("experience_opened");
             }}
           />
+          <ExperiencePanorama onPhoto={openPhoto} />
           <GoalFinderSection
             goalId={goalId}
             onGoal={selectGoal}
@@ -232,6 +260,14 @@ export default function Home() {
             }}
             onBook={() => book("journey")}
           />
+          <TrainersSection
+            onExplore={(id) => {
+              const p = getProgram(id);
+              selectGoal(p.goalId);
+              setDialog({ program: p });
+              track("coach_program_explored", { program: id });
+            }}
+          />
           <MembershipSection
             selected={planId}
             recommended={recommended}
@@ -242,7 +278,12 @@ export default function Home() {
             onBook={() => book("membership")}
           />
           <TestimonialSection />
+          <TransformationSection onBook={() => book("progress_photographs")} />
           <FirstDaySection onBook={() => book("first_visit")} />
+          <FacilitiesSection
+            onPhoto={openPhoto}
+            onBook={() => book("facilities")}
+          />
           <RecommendationSection
             goalId={goalId}
             planId={planId}
@@ -425,7 +466,9 @@ export default function Home() {
                   ? "Start a WhatsApp conversation"
                   : dialog === "experience"
                     ? "The Areesan experience"
-                    : "Explore your program"
+                    : typeof dialog === "object" && "photo" in dialog
+                      ? "Areesan photo gallery"
+                      : "Explore your program"
             }
             onClose={() => setDialog(null)}
           >
@@ -497,41 +540,64 @@ export default function Home() {
                 </a>
               </div>
             )}
-            {typeof dialog === "object" && dialog !== null && (
-              <div className="program-modal">
-                <MotionPlayer
-                  kind="program"
-                  input={{ programId: dialog.program.id }}
-                  autoPlay
-                  label={`Animated explainer for ${dialog.program.name}`}
+            {typeof dialog === "object" &&
+              dialog !== null &&
+              "photo" in dialog && (
+                <PhotoLightbox
+                  index={dialog.photo}
+                  onChange={(index) => setDialog({ photo: index })}
                 />
-                <div className="modal-content">
-                  <span className="mini-label">{dialog.program.label}</span>
-                  <h2>{dialog.program.name}</h2>
-                  <p>{dialog.program.detail}</p>
-                  <div className="modal-meta">
-                    <span>{dialog.program.level}</span>
-                    <span>{dialog.program.frequency}</span>
-                    <span>{dialog.program.duration} / session</span>
+              )}
+            {typeof dialog === "object" &&
+              dialog !== null &&
+              "program" in dialog && (
+                <div className="program-modal">
+                  <div className="program-modal-photograph">
+                    <Image
+                      src={photoSource(programPhotoIds[dialog.program.id])}
+                      alt={
+                        getPhotograph(programPhotoIds[dialog.program.id]).alt
+                      }
+                      fill
+                      sizes="(max-width:760px) 100vw, 880px"
+                      loading="eager"
+                    />
+                    <div />
+                    <span className="mini-label">{dialog.program.label}</span>
                   </div>
-                  <div className="focus-tags">
-                    {dialog.program.focus.map((x) => (
-                      <span key={x}>
-                        <Icon name="check" size={14} />
-                        {x}
-                      </span>
-                    ))}
+                  <MotionPlayer
+                    kind="program"
+                    input={{ programId: dialog.program.id }}
+                    autoPlay
+                    label={`Animated explainer for ${dialog.program.name}`}
+                  />
+                  <div className="modal-content">
+                    <span className="mini-label">{dialog.program.label}</span>
+                    <h2>{dialog.program.name}</h2>
+                    <p>{dialog.program.detail}</p>
+                    <div className="modal-meta">
+                      <span>{dialog.program.level}</span>
+                      <span>{dialog.program.frequency}</span>
+                      <span>{dialog.program.duration} / session</span>
+                    </div>
+                    <div className="focus-tags">
+                      {dialog.program.focus.map((x) => (
+                        <span key={x}>
+                          <Icon name="check" size={14} />
+                          {x}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="fine-print">
+                      Suggested routine; your coach can tailor the approach to
+                      your needs.
+                    </p>
+                    <AnimatedButton onClick={() => book("program_explainer")}>
+                      Try this program
+                    </AnimatedButton>
                   </div>
-                  <p className="fine-print">
-                    Suggested routine; your coach can tailor the approach to
-                    your needs.
-                  </p>
-                  <AnimatedButton onClick={() => book("program_explainer")}>
-                    Try this program
-                  </AnimatedButton>
                 </div>
-              </div>
-            )}
+              )}
           </Modal>
         )}
       </SceneRuntimeProvider>

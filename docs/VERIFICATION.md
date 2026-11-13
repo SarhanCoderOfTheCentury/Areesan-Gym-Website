@@ -15,6 +15,15 @@
 - MP4, WebM, and JPEG brand assets were generated from the shared Remotion SVG timeline.
 - Fonts are served locally. Media rendering is not part of the Vercel build.
 
+## Photography restoration checks
+
+- Verified all 13 original image paths occur in the homepage DOM.
+- Restored the panorama, five photo-backed program cards, three coach portraits, testimonial avatars, two comparison stories, and four facilities images.
+- Exercised gallery navigation with both the Next button and the Right arrow key.
+- Exercised the before-and-after comparison with keyboard input and verified its updated accessible value.
+- Checked the restored coach layout at 390px and 360px, including right-aligned specialty badges and no horizontal overflow.
+- Reused the original optimized WebP assets and kept below-fold images lazy-loaded.
+
 ## Verification limits
 
 The available cloud browser reports WebGL as unavailable. Its static-scene behavior was verified, but GPU animation, pointer parallax inside WebGL, and context restoration could not be observed on a GPU-enabled device in this environment. The Three.js code is included in the production build and protected by fallbacks.

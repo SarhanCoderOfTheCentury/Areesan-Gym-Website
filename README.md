@@ -2,9 +2,9 @@
 
 A responsive Next.js website with five procedural Three.js scenes, five Remotion compositions, and Framer Motion interactions. The redesign follows the black-and-gold Areesan identity without needing real gym photography, equipment specifications, or a floor plan.
 
-![Redesigned Areesan homepage, showing the static WebGL fallback](docs/interactive-desktop.jpg)
+![Photo-enhanced Areesan programs in the interactive redesign](docs/restored-desktop.jpg)
 
-[View the mobile preview](docs/interactive-mobile.jpg)
+[View the mobile preview](docs/restored-mobile.jpg)
 
 ## Run and deploy
 
@@ -109,4 +109,8 @@ See `docs/VERIFICATION.md` for the checks performed and the environment limits. 
 
 Prices, trial terms, membership inclusions, and the retained sample testimonials come from the original concept. The interface labels those details as illustrative. Real member reviews, gym images, equipment lists, trainer credentials, exact opening hours, and facility models have intentionally not been invented.
 
-The original generated photographs remain in `public/images/` for future use but are not fetched by the redesigned homepage. `ASSETS.md` preserves their original generation notes. DM Sans and Manrope are self-hosted as WOFF2 files, with their SIL Open Font Licenses included in `public/fonts/`.
+All 13 original generated photographs are displayed in the current homepage. A training panorama follows the 3D hero, the five program cards use their original photography, the coach portraits and testimonial avatars return, two progress stories have keyboard-accessible before-and-after comparison sliders, and four facilities images open a 13-photo lightbox. The Three.js scenes, Remotion compositions, recommendations, and enquiry flow remain in place.
+
+`lib/photography.ts` maps the existing assets to their captions, programs, and coach profiles. Images retain their original WebP files, reserve their layout space, and load lazily; the active lightbox image loads eagerly. Gallery navigation supports buttons, thumbnails, and Left/Right arrow keys. Generated concept imagery and sample profiles are identified in the interface.
+
+`ASSETS.md` preserves the original generation notes. DM Sans and Manrope are self-hosted as WOFF2 files, with their SIL Open Font Licenses included in `public/fonts/`.

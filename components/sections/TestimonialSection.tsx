@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, MapPin, Pause, Play } from "lucide-react";
@@ -122,7 +123,15 @@ export default function TestimonialSection() {
                 aria-pressed={index === i}
                 onClick={() => setIndex(i)}
               >
-                <span className="initial-avatar">{x.initials}</span>
+                <span className="initial-avatar">
+                  <Image
+                    src={`/images/${["personal", "fat-loss", "muscle"][i]}.webp`}
+                    alt=""
+                    fill
+                    sizes="44px"
+                    loading="lazy"
+                  />
+                </span>
                 <span>
                   <strong>{x.name}</strong>
                   <small>

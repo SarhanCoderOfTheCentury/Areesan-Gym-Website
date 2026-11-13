@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import {
   useScroll,
   useMotionValueEvent,
@@ -8,6 +9,7 @@ import {
 } from "framer-motion";
 import { ArrowUpRight, Play, Clock3 } from "lucide-react";
 import { programs, journey, type Program } from "@/lib/content";
+import { getPhotograph, programPhotoIds, photoSource } from "@/lib/photography";
 import SceneViewport from "../three/SceneViewport";
 import { AnimatedButton, Icon, SectionHeading } from "../ui/Primitives";
 export default function ProgramSection({
@@ -69,6 +71,16 @@ export default function ProgramSection({
               whileHover={{ y: -5 }}
               whileTap={{ scale: 0.99 }}
             >
+              <div className="program-photograph">
+                <Image
+                  src={photoSource(programPhotoIds[p.id])}
+                  alt={getPhotograph(programPhotoIds[p.id]).alt}
+                  fill
+                  sizes="(max-width:760px) 50vw, 33vw"
+                  loading="lazy"
+                />
+                <span className="program-photograph-shade" />
+              </div>
               <div className="program-top">
                 <span>{p.number} / PROGRAM</span>
                 <ArrowUpRight size={21} />
