@@ -8,19 +8,30 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "render:brand": "node --import tsx scripts/render-brand.mjs"
   },
   "dependencies": {
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "framer-motion": "^12.23.24",
-    "lucide-react": "^0.468.0"
+    "lucide-react": "^0.468.0",
+    "three": "0.180.0",
+    "@react-three/fiber": "9.4.0",
+    "@react-three/drei": "10.7.7",
+    "remotion": "4.0.543",
+    "@remotion/player": "4.0.543"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "@types/three": "0.180.0",
+    "@remotion/bundler": "4.0.543",
+    "@remotion/renderer": "4.0.543",
+    "tsx": "^4.20.6",
+    "sharp": "^0.34.5"
   }
 }
